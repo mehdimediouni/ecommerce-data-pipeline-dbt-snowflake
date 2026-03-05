@@ -1,4 +1,18 @@
 
+# dbt artifacts
 target/
 dbt_packages/
 logs/
+
+# Environnement Python (Ta bulle de travail)
+dbt-env/
+venv/
+env/
+*.pyc
+
+# Secrets et Config
+profiles.yml
+.env
+
+# Système Mac
+.DS_Store
