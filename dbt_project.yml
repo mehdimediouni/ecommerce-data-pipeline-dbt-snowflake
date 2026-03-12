@@ -31,6 +31,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   nexus_retail:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+    # la stratégie par défaut pour tout le projet
+    +materialized: table
+    
+    # une exception pour le dossier staging
+    staging:
       +materialized: view
