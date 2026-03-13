@@ -7,7 +7,6 @@ renamed as (
         order_id,
         customer_id,
         order_status,
-        -- On transforme les chaînes de caractères en vrais types temporels
         cast(order_purchase_timestamp as timestamp) as purchase_at,
         cast(order_approved_at as timestamp) as approved_at,
         cast(order_delivered_carrier_date as timestamp) as delivered_carrier_at,
