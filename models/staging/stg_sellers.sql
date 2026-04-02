@@ -11,7 +11,8 @@ renamed as (
         status as seniority_level,
         seller_zip_code_prefix as zip_code,
         seller_city as city,
-        seller_state as state
+        seller_state as state,
+        _loaded_at
     from source
 )
 

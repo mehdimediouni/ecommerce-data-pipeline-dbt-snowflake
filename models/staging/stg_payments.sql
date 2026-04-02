@@ -8,7 +8,8 @@ renamed as (
         payment_sequential as payment_sequence,
         payment_type,
         payment_installments,
-        cast(payment_value as float) as payment_amount
+        cast(payment_value as float) as payment_amount,
+        _loaded_at
     from source
 )
 

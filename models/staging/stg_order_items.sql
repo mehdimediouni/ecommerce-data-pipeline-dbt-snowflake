@@ -10,7 +10,8 @@ renamed as (
         seller_id,
         cast(shipping_limit_date as timestamp) as shipping_limit_at,
         cast(price as float) as price,
-        cast(freight_value as float) as shipping_cost
+        cast(freight_value as float) as shipping_cost,
+        _loaded_at
     from source
 )
 
