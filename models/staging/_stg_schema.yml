@@ -1,0 +1,163 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Modèle de staging des clients avec données dénormalisées"
+    columns:
+      - name: customer_id
+        description: "Identifiant unique du client"
+        data_type: varchar
+      - name: customer_unique_id
+        description: "Identifiant unique du client (clé alternative)"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: zip_code
+        description: "Code postal du client"
+        data_type: varchar
+      - name: city
+        description: "Ville du client"
+        data_type: varchar
+      - name: state
+        description: "État du client (Brésil)"
+        data_type: varchar
+
+  - name: stg_orders
+    description: "Modèle de staging des commandes avec dates et statuts"
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Identifiant du client"
+        data_type: varchar
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: order_status
+        description: "Statut de la commande"
+        data_type: varchar
+      - name: order_purchase_timestamp
+        description: "Date et heure de la commande"
+        data_type: timestamp
+      - name: order_approved_at
+        description: "Date et heure d'approbation de la commande"
+        data_type: timestamp
+      - name: order_delivered_carrier_date
+        description: "Date de livraison par le transporteur"
+        data_type: timestamp
+      - name: order_delivered_customer_date
+        description: "Date de livraison au client"
+        data_type: timestamp
+      - name: order_estimated_delivery_date
+        description: "Date estimée de livraison"
+        data_type: timestamp
+
+  - name: stg_order_items
+    description: "Modèle de staging des articles de commande"
+    columns:
+      - name: order_id
+        description: "Identifiant de la commande"
+        data_type: varchar
+      - name: order_item_id
+        description: "Identifiant de l'article dans la commande"
+        data_type: integer
+      - name: product_id
+        description: "Identifiant du produit"
+        data_type: varchar
+      - name: seller_id
+        description: "Identifiant du vendeur"
+        data_type: varchar
+      - name: shipping_limit_date
+        description: "Date limite d'expédition"
+        data_type: timestamp
+      - name: price
+        description: "Prix de l'article"
+        data_type: decimal
+      - name: freight_value
+        description: "Valeur du fret"
+        data_type: decimal
+
+  - name: stg_payments
+    description: "Modèle de staging des paiements"
+    columns:
+      - name: order_id
+        description: "Identifiant de la commande"
+        data_type: varchar
+      - name: payment_sequential
+        description: "Numéro séquentiel du paiement"
+        data_type: integer
+      - name: payment_type
+        description: "Type de paiement (carte, virement, etc.)"
+        data_type: varchar
+      - name: payment_installments
+        description: "Nombre d'installments"
+        data_type: integer
+      - name: payment_value
+        description: "Montant du paiement"
+        data_type: decimal
+
+  - name: stg_products
+    description: "Modèle de staging des produits avec catégories"
+    columns:
+      - name: product_id
+        description: "Identifiant unique du produit"
+        data_type: varchar
+      - name: product_name_lenght
+        description: "Longueur du nom du produit"
+        data_type: integer
+      - name: product_description_lenght
+        description: "Longueur de la description du produit"
+        data_type: integer
+      - name: product_photos_qty
+        description: "Nombre de photos du produit"
+        data_type: integer
+      - name: product_weight_g
+        description: "Poids du produit en grammes"
+        data_type: decimal
+      - name: product_length_cm
+        description: "Longueur du produit en centimètres"
+        data_type: decimal
+      - name: product_height_cm
+        description: "Hauteur du produit en centimètres"
+        data_type: decimal
+      - name: product_width_cm
+        description: "Largeur du produit en centimètres"
+        data_type: decimal
+      - name: product_category_name
+        description: "Catégorie du produit"
+        data_type: varchar
+
+  - name: stg_sellers
+    description: "Modèle de staging des vendeurs enrichi avec infos RH"
+    columns:
+      - name: seller_id
+        description: "Identifiant unique du vendeur"
+        data_type: varchar
+      - name: zip_code
+        description: "Code postal du vendeur"
+        data_type: varchar
+      - name: city
+        description: "Ville du vendeur"
+        data_type: varchar
+      - name: state
+        description: "État du vendeur (Brésil)"
+        data_type: varchar
+      - name: name
+        description: "Prénom du vendeur"
+        data_type: varchar
+      - name: last_name
+        description: "Nom de famille du vendeur"
+        data_type: varchar
+      - name: full_name
+        description: "Nom complet du vendeur (Prénom + Nom)"
+        data_type: varchar
+      - name: seniority_level
+        description: "Niveau de séniorité (junior, senior, manager, top management)"
+        data_type: varchar
