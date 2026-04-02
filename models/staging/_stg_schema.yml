@@ -3,6 +3,9 @@ version: 2
 models:
   - name: stg_customers
     description: "Modèle de staging des clients avec données dénormalisées"
+    config:
+      contract:
+        enforced: true
     columns:
       - name: customer_id
         description: "Identifiant unique du client"
@@ -15,16 +18,22 @@ models:
           - not_null
       - name: zip_code
         description: "Code postal du client"
-        data_type: varchar
+        data_type: integer
       - name: city
         description: "Ville du client"
         data_type: varchar
       - name: state
         description: "État du client (Brésil)"
         data_type: varchar
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
 
   - name: stg_orders
     description: "Modèle de staging des commandes avec dates et statuts"
+    config:
+      contract:
+        enforced: true
     columns:
       - name: order_id
         description: "Identifiant unique de la commande"
@@ -43,24 +52,30 @@ models:
       - name: order_status
         description: "Statut de la commande"
         data_type: varchar
-      - name: order_purchase_timestamp
-        description: "Date et heure de la commande"
-        data_type: timestamp
-      - name: order_approved_at
-        description: "Date et heure d'approbation de la commande"
-        data_type: timestamp
-      - name: order_delivered_carrier_date
+      - name: purchase_at
+        description: "Date de la commande"
+        data_type: date
+      - name: approved_at
+        description: "Date d'approbation de la commande"
+        data_type: date
+      - name: delivered_carrier_at
         description: "Date de livraison par le transporteur"
-        data_type: timestamp
-      - name: order_delivered_customer_date
+        data_type: date
+      - name: delivered_customer_at
         description: "Date de livraison au client"
-        data_type: timestamp
-      - name: order_estimated_delivery_date
+        data_type: date
+      - name: estimated_delivery_at
         description: "Date estimée de livraison"
+        data_type: date
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
         data_type: timestamp
 
   - name: stg_order_items
     description: "Modèle de staging des articles de commande"
+    config:
+      contract:
+        enforced: true
     columns:
       - name: order_id
         description: "Identifiant de la commande"
@@ -74,23 +89,29 @@ models:
       - name: seller_id
         description: "Identifiant du vendeur"
         data_type: varchar
-      - name: shipping_limit_date
+      - name: shipping_limit_at
         description: "Date limite d'expédition"
-        data_type: timestamp
+        data_type: date
       - name: price
         description: "Prix de l'article"
-        data_type: decimal
-      - name: freight_value
-        description: "Valeur du fret"
-        data_type: decimal
+        data_type: float
+      - name: shipping_cost
+        description: "Coût de livraison"
+        data_type: float
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
 
   - name: stg_payments
     description: "Modèle de staging des paiements"
+    config:
+      contract:
+        enforced: true
     columns:
       - name: order_id
         description: "Identifiant de la commande"
         data_type: varchar
-      - name: payment_sequential
+      - name: payment_sequence
         description: "Numéro séquentiel du paiement"
         data_type: integer
       - name: payment_type
@@ -99,55 +120,58 @@ models:
       - name: payment_installments
         description: "Nombre d'installments"
         data_type: integer
-      - name: payment_value
+      - name: payment_amount
         description: "Montant du paiement"
-        data_type: decimal
+        data_type: float
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
 
   - name: stg_products
     description: "Modèle de staging des produits avec catégories"
+    config:
+      contract:
+        enforced: true
     columns:
       - name: product_id
         description: "Identifiant unique du produit"
         data_type: varchar
-      - name: product_name_lenght
-        description: "Longueur du nom du produit"
-        data_type: integer
-      - name: product_description_lenght
-        description: "Longueur de la description du produit"
-        data_type: integer
-      - name: product_photos_qty
-        description: "Nombre de photos du produit"
-        data_type: integer
-      - name: product_weight_g
-        description: "Poids du produit en grammes"
-        data_type: decimal
-      - name: product_length_cm
-        description: "Longueur du produit en centimètres"
-        data_type: decimal
-      - name: product_height_cm
-        description: "Hauteur du produit en centimètres"
-        data_type: decimal
-      - name: product_width_cm
-        description: "Largeur du produit en centimètres"
-        data_type: decimal
-      - name: product_category_name
+      - name: category_name
         description: "Catégorie du produit"
         data_type: varchar
+      - name: name_length
+        description: "Longueur du nom du produit"
+        data_type: integer
+      - name: description_length
+        description: "Longueur de la description du produit"
+        data_type: integer
+      - name: photo_count
+        description: "Nombre de photos du produit"
+        data_type: integer
+      - name: weight_g
+        description: "Poids du produit en grammes"
+        data_type: integer
+      - name: length_cm
+        description: "Longueur du produit en centimètres"
+        data_type: integer
+      - name: height_cm
+        description: "Hauteur du produit en centimètres"
+        data_type: integer
+      - name: width_cm
+        description: "Largeur du produit en centimètres"
+        data_type: integer
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
 
   - name: stg_sellers
     description: "Modèle de staging des vendeurs enrichi avec infos RH"
+    config:
+      contract:
+        enforced: true
     columns:
       - name: seller_id
         description: "Identifiant unique du vendeur"
-        data_type: varchar
-      - name: zip_code
-        description: "Code postal du vendeur"
-        data_type: varchar
-      - name: city
-        description: "Ville du vendeur"
-        data_type: varchar
-      - name: state
-        description: "État du vendeur (Brésil)"
         data_type: varchar
       - name: name
         description: "Prénom du vendeur"
@@ -161,3 +185,15 @@ models:
       - name: seniority_level
         description: "Niveau de séniorité (junior, senior, manager, top management)"
         data_type: varchar
+      - name: zip_code
+        description: "Code postal du vendeur"
+        data_type: integer
+      - name: city
+        description: "Ville du vendeur"
+        data_type: varchar
+      - name: state
+        description: "État du vendeur (Brésil)"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
