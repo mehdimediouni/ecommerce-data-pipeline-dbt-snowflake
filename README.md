@@ -38,7 +38,7 @@ Chaque modèle :
 - `data_type` explicite pour chaque colonne
 
 ### 3. Tests de qualité ajoutés
-Tests unitaires (unique, not null, accepted valued, relationship) et singulier (from dbt.utils) intégrés et déclarés dans le YAML pour augmenter la qualité et la fiabilité des données :
+Tests unitaires (unique, not null, accepted valued, relationship) et singulier (from dbt.utils) intégrés et déclarés dans le YAML pour augmenter la qualité et la fiabilité des données
 
 
 ### 4. Contrat de schéma activé
