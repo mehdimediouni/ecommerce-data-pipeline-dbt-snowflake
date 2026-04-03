@@ -1,0 +1,220 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Modèle de staging des clients avec données dénormalisées et dédoublonnées"
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: customer_id
+        description: "Identifiant unique du client"
+        data_type: varchar
+      - name: customer_unique_id
+        description: "Identifiant unique du client (clé alternative)"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: zip_code
+        description: "Code postal du client"
+        data_type: integer
+      - name: city
+        description: "Ville du client"
+        data_type: varchar
+      - name: state
+        description: "État du client"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
+
+  - name: stg_orders
+    description: "Modèle de staging des commandes avec calculs de délais logistiques"
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Identifiant du client"
+        data_type: varchar
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: order_status
+        description: "Statut de la commande"
+        data_type: varchar
+      - name: purchase_date
+        description: "Date de la commande"
+        data_type: date
+      - name: approved_date
+        description: "Date d'approbation"
+        data_type: date
+      - name: delivered_carrier_date
+        description: "Date de remise au transporteur"
+        data_type: date
+      - name: delivered_customer_date
+        description: "Date de livraison effective au client"
+        data_type: date
+      - name: estimated_delivery_date
+        description: "Date de livraison estimée"
+        data_type: date
+      - name: days_to_approve
+        description: "Nombre de jours pour approuver la commande"
+        data_type: integer
+      - name: actual_delivery_duration
+        description: "Durée réelle de livraison (achat vers livraison client)"
+        data_type: integer
+      - name: estimated_delivery_duration
+        description: "Durée théorique estimée lors de l'achat"
+        data_type: integer
+      - name: delivery_delay
+        description: "Écart de livraison (positif = retard, négatif = avance)"
+        data_type: integer
+      - name: is_late_delivery
+        description: "Flag indiquant si la commande est arrivée après l'estimation"
+        data_type: boolean
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
+
+  - name: stg_order_items
+    description: "Modèle de staging des articles de commande"
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: order_id
+        description: "Identifiant de la commande"
+        data_type: varchar
+      - name: order_item_id
+        description: "Identifiant de l'article dans la commande"
+        data_type: integer
+      - name: product_id
+        description: "Identifiant du produit"
+        data_type: varchar
+      - name: seller_id
+        description: "Identifiant du vendeur"
+        data_type: varchar
+      - name: shipping_limit_date
+        description: "Date limite d'expédition"
+        data_type: date
+      - name: price
+        description: "Prix unitaire de l'article"
+        data_type: numeric 
+      - name: shipping_cost
+        description: "Coût de livraison"
+        data_type: numeric
+      - name: total_price
+        description: "Prix total (prix + livraison)"
+        data_type: numeric
+      - name: is_multi_item_order
+        description: "Flag indiquant si l'article fait partie d'une commande à plusieurs articles"
+        data_type: boolean
+      - name: days_before_shipping_limit
+        description: "Jours restants avant la limite d'expédition"
+        data_type: integer
+      - name: shipping_cost_ratio
+        description: "Pourcentage du coût de transport sur le prix total"
+        data_type: numeric
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
+
+  - name: stg_payments
+    description: "Modèle de staging des paiements"
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: order_id
+        data_type: varchar
+      - name: payment_sequence
+        data_type: integer
+      - name: payment_type
+        data_type: varchar
+      - name: payment_installments
+        data_type: integer
+      - name: payment_amount
+        data_type: float
+      - name: _loaded_at
+        data_type: timestamp
+
+  - name: stg_products
+    description: "Modèle de staging des produits avec caractéristiques physiques"
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: product_id
+        description: "Identifiant unique du produit"
+        data_type: varchar
+      - name: category_name
+        description: "Catégorie du produit"
+        data_type: varchar
+      - name: name_length
+        description: "Longueur du nom du produit"
+        data_type: integer
+      - name: description_length
+        description: "Longueur de la description"
+        data_type: integer
+      - name: photo_count
+        description: "Nombre de photos"
+        data_type: integer
+      - name: weight_g
+        description: "Poids en grammes"
+        data_type: integer
+      - name: length_cm
+        description: "Longueur en cm"
+        data_type: integer
+      - name: height_cm
+        description: "Hauteur en cm"
+        data_type: integer
+      - name: width_cm
+        description: "Largeur en cm"
+        data_type: integer
+      - name: _loaded_at
+        description: "Date de chargement"
+        data_type: timestamp
+
+  - name: stg_sellers
+    description: "Modèle de staging des vendeurs enrichi avec infos RH"
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: seller_id
+        description: "Identifiant unique du vendeur"
+        data_type: varchar
+      - name: name
+        description: "Prénom du vendeur"
+        data_type: varchar
+      - name: last_name
+        description: "Nom de famille du vendeur"
+        data_type: varchar
+      - name: full_name
+        description: "Nom complet du vendeur (Prénom + Nom)"
+        data_type: varchar
+      - name: seniority_level
+        description: "Niveau de séniorité (junior, senior, manager, top management)"
+        data_type: varchar
+      - name: zip_code
+        description: "Code postal du vendeur"
+        data_type: integer
+      - name: city
+        description: "Ville du vendeur"
+        data_type: varchar
+      - name: state
+        description: "État du vendeur (Brésil)"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Date/heure du chargement des données"
+        data_type: timestamp
