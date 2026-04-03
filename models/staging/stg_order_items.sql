@@ -17,7 +17,7 @@ renamed as (
 
 enriched as (
     select
-        * * exclude (_loaded_at),
+        * exclude (_loaded_at),
         (price + shipping_cost) as total_price,
         case 
             when max(order_item_id) over (partition by order_id) > 1 then true 
