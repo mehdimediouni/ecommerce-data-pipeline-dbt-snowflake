@@ -37,3 +37,11 @@ models:
     # une exception pour le dossier staging
     staging:
       +materialized: view
+
+    intermediate:
+      +schema: intermediate
+      +materialized: table 
+      
+    marts:
+      +schema: marts
+      +materialized: table
