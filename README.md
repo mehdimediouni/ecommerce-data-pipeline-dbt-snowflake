@@ -30,19 +30,16 @@ Chaque modèle :
 - Renomme/dérive les colonnes
 - Cast les dates/valeurs au bon type
 - Ajoute `_loaded_at` pour le tracking
+- Ajoute quelques calculs statistiques pour soulager les requettes sur le mart
 
 ### 2. Documentation / contrat de schéma (`models/staging/_stg_schema.yml`)
-- Fichier YAML généré et enrichi manuellement
+- Fichier YAML généré avec Copilot et enrichi manuellement
 - Description de chaque modèle + colonne
 - `data_type` explicite pour chaque colonne
-- Champs ajoutés : `purchase_at`, `shipping_cost`, `payment_amount`, etc.
-- Colonne `_loaded_at` documentée partout
 
 ### 3. Tests de qualité ajoutés
-Tests déclarés dans le YAML :
-- `unique` (clés uniques)
-- `not_null` (non-null)
-- `relationships` (`stg_orders.customer_id → stg_customers.customer_id`)
+Tests unitaires (unique, not null, accepted valued, relationship) et singulier (from dbt.utils) intégrés et déclarés dans le YAML pour augmenter la qualité et la fiabilité des données :
+
 
 ### 4. Contrat de schéma activé
 Sur les 6 modèles :
@@ -53,7 +50,4 @@ Cela empêche :
 - modification de type non déclarée
 - dérive entre SQL et YAML
 
-### 5. Contrôle de fraîcheur des sources (`models/staging/_sources.yml`)
-- `orders` : `loaded_at_field: order_purchase_timestamp`
-- `warn_after: 48h`
-- `error_after: 180j` (approx. 6 mois)
+
