@@ -8,7 +8,7 @@ aggregated as (
         -- nombre de mensualités pour les commandes échelonnées
         max(payment_installments) as nb_installments,
         -- montant total payé pour la commande
-        sum(payment_amount) as total_payment_value,
+        sum(payment_amount) as total_payment_amount,
         -- nombre de paiements effectués pour la commande
         count(payment_sequence) as nb_payments,
         -- flag pour identifier si le payment a contenu une carte de crédit
