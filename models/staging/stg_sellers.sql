@@ -8,10 +8,10 @@ renamed as (
         first_name as name,
         family_name as last_name,
         first_name || ' ' || family_name as full_name,
-        status as seniority_level,
+        lower(status) as seniority_level,
         seller_zip_code_prefix as zip_code,
-        seller_city as city,
-        seller_state as state,
+        upper(seller_city) as city,
+        upper(seller_state) as state,
         _loaded_at
     from source
 )

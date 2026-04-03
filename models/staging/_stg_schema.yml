@@ -10,11 +10,13 @@ models:
       - name: customer_id
         description: "Identifiant unique du client"
         data_type: varchar
+        tests:
+          - unique
+          - not_null
       - name: customer_unique_id
         description: "Identifiant unique du client (clé alternative)"
         data_type: varchar
         tests:
-          - unique
           - not_null
       - name: zip_code
         description: "Code postal du client"
@@ -45,6 +47,7 @@ models:
         description: "Identifiant du client"
         data_type: varchar
         tests:
+          - not_null
           - relationships:
               arguments:
                 to: ref('stg_customers')
@@ -52,6 +55,10 @@ models:
       - name: order_status
         description: "Statut de la commande"
         data_type: varchar
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['DELIVERED', 'SHIPPED', 'CANCELED', 'INVOICED', 'PROCESSING', 'APPROVED', 'UNAVAILABLE', 'CREATED']
       - name: purchase_date
         description: "Date de la commande"
         data_type: date
@@ -94,6 +101,8 @@ models:
     columns:
       - name: order_id
         description: "Identifiant de la commande"
+        tests:
+          - not_null
         data_type: varchar
       - name: order_item_id
         description: "Identifiant de l'article dans la commande"
@@ -110,6 +119,10 @@ models:
       - name: price
         description: "Prix unitaire de l'article"
         data_type: numeric 
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
       - name: shipping_cost
         description: "Coût de livraison"
         data_type: numeric
@@ -156,6 +169,9 @@ models:
     columns:
       - name: product_id
         description: "Identifiant unique du produit"
+        tests:
+          - unique
+          - not_null
         data_type: varchar
       - name: category_name
         description: "Catégorie du produit"
