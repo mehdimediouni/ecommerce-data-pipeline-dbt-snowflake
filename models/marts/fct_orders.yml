@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Faits des commandes consolidant les données des commandes, des articles et des paiements"
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Identifiant du client associé à la commande"
+        data_type: varchar
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: order_status
+        description: "Statut de la commande"
+        data_type: varchar
+      - name: purchase_date
+        description: "Date d'achat de la commande"
+        data_type: date
+      - name: approved_date
+        description: "Date d'approbation de la commande"
+        data_type: date
+      - name: delivered_customer_date
+        description: "Date de livraison effective au client"
+        data_type: date
+      - name: estimated_delivery_date
+        description: "Date de livraison estimée"
+        data_type: date
+      - name: days_to_approve
+        description: "Nombre de jours entre l'achat et l'approbation"
+        data_type: integer
+      - name: actual_delivery_duration
+        description: "Durée réelle de livraison (jours)"
+        data_type: integer
+      - name: delivery_delay
+        description: "Retard de livraison en jours (positif = retard, négatif = avance)"
+        data_type: integer
+      - name: is_late_delivery
+        description: "Indicateur de livraison en retard"
+        data_type: boolean
+      - name: total_items_price
+        description: "Total des prix des articles pour la commande"
+        data_type: numeric
+      - name: total_shipping_cost
+        description: "Total des frais de livraison pour la commande"
+        data_type: numeric
+      - name: total_order_amount
+        description: "Montant total de la commande (articles + livraison)"
+        data_type: numeric
+      - name: nb_items
+        description: "Nombre d'articles dans la commande"
+        data_type: integer
+      - name: total_payment_amount
+        description: "Montant total payé pour la commande"
+        data_type: numeric
+      - name: nb_installments
+        description: "Nombre de mensualités associées au paiement"
+        data_type: integer
+      - name: nb_payments
+        description: "Nombre de paiements effectués pour la commande"
+        data_type: integer
+      - name: has_credit_card_payment
+        description: "Indicateur de paiement par carte de crédit"
+        data_type: boolean
+      - name: has_voucher_payment
+        description: "Indicateur de paiement par voucher"
+        data_type: boolean
