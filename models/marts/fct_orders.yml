@@ -58,12 +58,16 @@ models:
       - name: total_order_amount
         description: "Montant total de la commande (articles + livraison)"
         data_type: numeric
+        tests:
+          - negative_amount
       - name: nb_items
         description: "Nombre d'articles dans la commande"
         data_type: integer
       - name: total_payment_amount
         description: "Montant total payé pour la commande"
         data_type: numeric
+        tests:
+          - negative_amount
       - name: nb_installments
         description: "Nombre de mensualités associées au paiement"
         data_type: integer
