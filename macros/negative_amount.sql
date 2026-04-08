@@ -1,4 +1,4 @@
-{% test negative_payment_amount(model, column_name) %}
+{% test negative_amount(model, column_name) %}
 
 select 
     {{ column_name }}
